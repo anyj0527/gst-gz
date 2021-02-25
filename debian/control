@@ -1,0 +1,19 @@
+Source: gst-gz
+Section: libs
+Priority: optional
+Maintainer: Yongjoo Ahn <yongjoo1.ahn@samsung.com>
+Build-Depends: gcc (>=5), debhelper (>=9), gstreamer1.0-plugins-base, libgstreamer-plugins-base1.0-dev, libgstreamer1.0-dev
+Standards-Version: 3.9.6
+Homepage: https://github.com/Snec/gst-gz
+
+Package: gst-gz
+Architecture: any
+Multi-Arch: same
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: gst-gz provides GStreamer plugins in order to compress and decompress data with zlib
+
+Package: gst-gz-dev
+Architecture: any
+Multi-Arch: same
+Depends: gst-gz, ${shlibs:Depends}, ${misc:Depends}
+Description: Development package for gst-gz

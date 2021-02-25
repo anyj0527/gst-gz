@@ -1,0 +1,5 @@
+gst-gz (1.0.0) unstable bionic focal; urgency=medium
+
+  * initial packaging for Ubuntu
+
+ -- Yongjoo Ahn <yongjoo1.ahn@samsung.com>  Thu, 4 Mar 2021 10:00:00 +0900

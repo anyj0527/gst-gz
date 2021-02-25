@@ -1,0 +1,46 @@
+#!/usr/bin/make -f
+# See debhelper(7) (uncomment to enable)
+# output every command that modifies files on the build system.
+#export DH_VERBOSE = 1
+
+
+# see FEATURE AREAS in dpkg-buildflags(1)
+#export DEB_BUILD_MAINT_OPTIONS = hardening=+all
+
+# see ENVIRONMENT in dpkg-buildflags(1)
+# package maintainers to append CFLAGS
+#export DEB_CFLAGS_MAINT_APPEND  = -Wall -pedantic
+# package maintainers to append LDFLAGS
+#export DEB_LDFLAGS_MAINT_APPEND = -Wl,--as-needed
+
+ROOT_DIR:=$(shell pwd)
+export VERSION:=3.2
+export INSTALL_PREFIX:=/usr/
+export INSTALL_LIBDIR:=lib
+export INSTALL_INCDIR:=include
+export DEB_HOST_MULTIARCH ?= $(shell dpkg-architecture -qDEB_HOST_MULTIARCH)
+export DEB_HOST_ARCH ?= $(shell dpkg-architecture -qDEB_HOST_ARCH)
+export GST_POSTFIX:=gstreamer-1.0
+
+%:
+	dh $@ --parallel
+
+override_dh_auto_clean:
+	rm -rf debian/tmp
+
+override_dh_auto_build:
+	./autogen.sh
+	./configure --with-gstreamer-api=1.0
+	make
+
+override_dh_auto_install:
+	mkdir -p debian/tmp${INSTALL_PREFIX}${INSTALL_LIBDIR}/${DEB_HOST_MULTIARCH}/${GST_POSTFIX}
+	install -m 755 src/.libs/libgstgz.so \
+		debian/tmp${INSTALL_PREFIX}${INSTALL_LIBDIR}/${DEB_HOST_MULTIARCH}/${GST_POSTFIX}
+	install -m 755 src/.libs/libgstgz.a \
+		debian/tmp${INSTALL_PREFIX}${INSTALL_LIBDIR}/${DEB_HOST_MULTIARCH}
+	mkdir -p debian/tmp${INSTALL_PREFIX}${INSTALL_INCDIR}
+	install -m 644 src/*.h debian/tmp${INSTALL_PREFIX}${INSTALL_INCDIR}
+
+override_dh_install:
+	dh_install --sourcedir=debian/tmp --list-missing
